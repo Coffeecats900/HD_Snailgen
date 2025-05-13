@@ -53,7 +53,6 @@ class StartScreen(Screens):
     def __init__(self, name=None):
         super().__init__(name)
         self.warning_label = None
-
         self.social_buttons = {}
 
         self.error_open = False
@@ -161,6 +160,10 @@ class StartScreen(Screens):
         """
         TODO: DOCS
         """
+        # Checks for dark mode
+        light_dark = "light"
+        if game.settings['dark mode']:
+            light_dark = "dark"
 
         super().screen_switches()
 
@@ -168,13 +171,14 @@ class StartScreen(Screens):
         # this is the only screen that has to check its own music, other screens handle that in the screen change
         music_manager.check_music("start screen")
 
-        bg = pygame.image.load("resources/images/menu.png").convert()
+        bg = pygame.image.load(f"resources/images/menu_{light_dark}.png").convert()
         if game.settings["dark mode"]:
             bg.fill(
                 game.config["theme"]["fullscreen_background"]["dark"]["mainmenu_tint"],
                 bg.get_rect(),
                 pygame.BLEND_MULT,
             )
+        
         self.add_bgs(
             {"mainmenu_bg": bg},
         )
@@ -389,6 +393,11 @@ class StartScreen(Screens):
             self.switch_clan_button.enable()
         else:
             self.switch_clan_button.disable()
+
+        if game.switches["error_message"] == "You have disabled species generation in game settings.":
+            self.new_clan_button.disable()
+        else:
+            self.new_clan_button.enable()
 
         if game.switches["error_message"]:
             error_text = "screens.start.error_text"

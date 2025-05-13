@@ -80,7 +80,22 @@
             "Use they/them as default pronouns",
             "If this setting is on new cats will generate with they/them pronouns, regardless of gender.",
             false
-        ]
+        ],
+		"bat_gen": [
+			"Generate bat cats",
+			"Disable this if you do not want bat cats.",
+			true
+		],
+		"bird_gen": [
+			"Generate bird cats",
+			"Disable this if you do not want bird cats.",
+			true
+		],
+		"earth_gen": [
+			"Generate earth cats",
+			"Disable this if you do not want earth cats.",
+			true
+		]
     },
     "..": "these are special. they do not have a display name or a tooltip",
     "__other": {

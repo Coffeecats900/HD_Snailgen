@@ -53,6 +53,7 @@ class Patrol:
 
         self.patrol_statuses = {}
         self.patrol_status_list = []
+        self.patrol_species = {}
 
         # Holds new cats for easy access
         self.new_cats: List[List[Cat]] = []
@@ -168,6 +169,11 @@ class Patrol:
             else:
                 self.patrol_statuses[cat.status] = 1
 
+            if cat.species in self.patrol_species:
+                self.patrol_species[cat.species] += 1
+            else:
+                self.patrol_species[cat.species] = 1
+
             # Combined patrol_statuses catagories
             if cat.status in ("medicine cat", "medicine cat apprentice"):
                 if "healer cats" in self.patrol_statuses:
@@ -219,7 +225,7 @@ class Patrol:
             possible_leader = [
                 i
                 for i in self.patrol_cats
-                if i.status not in ("medicine cat apprentice", "apprentice")
+                if i.status not in ["medicine cat apprentice", "apprentice"]
             ]
             if possible_leader:
                 # Flip a coin to pick the most experience, or oldest.
@@ -374,6 +380,7 @@ class Patrol:
         elif int(reputation) >= 71:
             welcoming_rep = True
             chance = welcoming_chance
+
 
         possible_patrols.extend(self.generate_patrol_events(self.HUNTING))
         possible_patrols.extend(self.generate_patrol_events(self.HUNTING_SZN))
@@ -533,7 +540,7 @@ class Patrol:
         for val in values:
             value_check = check_relationship_value(love1, love2, val)
             if (
-                val in ("romantic", "platonic", "admiration", "comfortable", "trust")
+                val in ["romantic", "platonic", "admiration", "comfortable", "trust"]
                 and value_check >= 20
             ):
                 chance_of_romance_patrol -= 1
@@ -588,7 +595,16 @@ class Patrol:
             if flag:
                 continue
 
-            if not event_for_tags(patrol.tags, Cat):
+            flag = False
+            for sta, num in patrol.min_max_species.items():
+                if len(num) != 2:
+                    print(f"Issue with status limits: {patrol.patrol_id}")
+                    continue
+
+                if not (num[0] <= self.patrol_species.get(sta, -1) <= num[1]):
+                    flag = True
+                    break
+            if flag:
                 continue
 
             if biome not in patrol.biome and "any" not in patrol.biome:

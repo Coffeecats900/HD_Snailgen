@@ -111,6 +111,9 @@ class Cat:
         gender=None,
         status="newborn",
         backstory="clanborn",
+        species=None,
+        wing_count=None,
+        display_wing_count=None,
         parent1=None,
         parent2=None,
         adoptive_parents=None,
@@ -150,7 +153,7 @@ class Cat:
         if (
             faded
         ):  # This must be at the top. It's a smaller list of things to init, which is only for faded cats
-            self.init_faded(ID, status, prefix, suffix, moons, **kwargs)
+            self.init_faded(ID, status, species, wing_count, display_wing_count, prefix, suffix, moons, **kwargs)
             return
 
         self.generate_events = GenerateEvents()
@@ -165,6 +168,9 @@ class Cat:
         self.status = status
         self.backstory = backstory
         self.age = None
+        self.species = species
+        self.wing_count = wing_count
+        self.display_wing_count = display_wing_count
         self.skills = CatSkills(skill_dict=skill_dict)
         self.personality = Personality(
             trait="troublesome", lawful=0, aggress=0, stable=0, social=0
@@ -260,11 +266,11 @@ class Cat:
                 self.age = CatAgeEnum.KITTEN
             elif status == "elder":
                 self.age = CatAgeEnum.SENIOR
-            elif status in (
+            elif status in [
                 "apprentice",
                 "mediator apprentice",
                 "medicine cat apprentice",
-            ):
+            ]:
                 self.age = CatAgeEnum.ADOLESCENT
             else:
                 self.age = choice(
@@ -278,6 +284,17 @@ class Cat:
             self.moons = randint(
                 self.age_moons[self.age][0], self.age_moons[self.age][1]
             )
+
+        # a bird? a plane? no it's the species
+        if self.species is None:
+            self.species = Pelt.init_species(self, [Cat.fetch_cat(i) for i in (self.parent1, self.parent2) if i])
+
+        # time to count the kitty wings :3
+        if self.wing_count is None:
+            self.wing_count = Pelt.init_wing_count(self, [Cat.fetch_cat(i) for i in (self.parent1, self.parent2) if i])
+            
+        if self.display_wing_count is None:
+            self.display_wing_count = self.wing_count
 
         # backstory
         if self.backstory is None:
@@ -331,11 +348,11 @@ class Cat:
         # SAVE CAT INTO ALL_CATS DICTIONARY IN CATS-CLASS
         self.all_cats[self.ID] = self
 
-        if self.ID is not None and self.ID != "0":
+        if self.ID not in ["0", None]:
             Cat.insert_cat(self)
 
-    def init_faded(self, ID, status, prefix, suffix, moons, **kwargs):
-        """Perform faded-specific initialization
+    def init_faded(self, ID, status, species, wing_count, display_wing_count, prefix, suffix, moons, **kwargs):
+        """Perform faded-specific initialisation
 
         :param ID: Cat ID
         :param status: Cat status
@@ -352,6 +369,9 @@ class Cat:
         self.adoptive_parents = []
         self.mate = []
         self.status = status
+        self.species = species
+        self.wing_count = wing_count
+        self.display_wing_count = display_wing_count
         self._pronouns = {}  # Needs to be set as a dict
         self.moons = moons
         self.dead_for = 0
@@ -418,6 +438,7 @@ class Cat:
 
         # APPEARANCE
         self.pelt = Pelt.generate_new_pelt(
+            self.species,
             self.gender,
             [Cat.fetch_cat(i) for i in (self.parent1, self.parent2) if i],
             self.age,
@@ -440,7 +461,7 @@ class Cat:
                 )
                 self.experience += exp + 3
                 m -= 1
-        elif self.age in (CatAgeEnum.YOUNG_ADULT, CatAgeEnum.ADULT):
+        elif self.age in [CatAgeEnum.YOUNG_ADULT, CatAgeEnum.ADULT]:
             self.experience = randint(
                 Cat.experience_levels_range["prepared"][0],
                 Cat.experience_levels_range["proficient"][1],
@@ -492,9 +513,6 @@ class Cat:
         Loads the correct pronouns for the loaded language.
         :return: List of dicts for the cat's pronouns
         """
-        if self.faded:
-            return []
-
         locale = i18n.config.get("locale")
         value = self._pronouns.get(locale)
         if value is None:
@@ -525,13 +543,13 @@ class Cat:
 
     def get_genderalign_string(self):
         # translate it if it's default
-        if self.genderalign in (
+        if self.genderalign in [
             "female",
             "male",
             "trans female",
             "trans male",
             "nonbinary",
-        ):
+        ]:
             return i18n.t(f"general.{self.genderalign}")
         # otherwise, it's custom - just return it directly
         return self.genderalign
@@ -847,7 +865,7 @@ class Cat:
         mentors and apprentices."""
         self.outside = True
 
-        if self.status in ("leader", "warrior"):
+        if self.status in ["leader", "warrior"]:
             self.status_change("warrior")
 
         for app in self.apprentice.copy():
@@ -955,7 +973,7 @@ class Cat:
     def rank_change_traits_skill(self, mentor):
         """Updates trait and skill upon ceremony"""
 
-        if self.status in ("warrior", "medicine cat", "mediator"):
+        if self.status in ["warrior", "medicine cat", "mediator"]:
             # Give a couple doses of mentor influence:
             if mentor:
                 max_influence = randint(0, 2)
@@ -1226,7 +1244,7 @@ class Cat:
                     for i in game.clan.starclan_cats
                     if self.fetch_cat(i)
                     and i not in life_givers
-                    and self.fetch_cat(i).status not in ("leader", "newborn")
+                    and self.fetch_cat(i).status not in ["leader", "newborn"]
                 ]
 
                 if len(possible_sc_cats) - 1 < amount:
@@ -1239,7 +1257,7 @@ class Cat:
                     for i in game.clan.darkforest_cats
                     if self.fetch_cat(i)
                     and i not in life_givers
-                    and self.fetch_cat(i).status not in ("leader", "newborn")
+                    and self.fetch_cat(i).status not in ["leader", "newborn"]
                 ]
                 if len(possible_df_cats) - 1 < amount:
                     extra_givers = possible_df_cats
@@ -1509,11 +1527,11 @@ class Cat:
         self.personality.set_kit(self.age.is_baby())
         # Upon age-change
 
-        if self.status in (
+        if self.status in [
             "apprentice",
             "mediator apprentice",
             "medicine cat apprentice",
-        ):
+        ]:
             self.update_mentor()
 
     def thoughts(self):
@@ -1559,7 +1577,7 @@ class Cat:
                     other_cat = None
                     break
         # for dead cats
-        elif where_kitty in ("starclan", "hell", "UR"):
+        elif where_kitty in ["starclan", "hell", "UR"]:
             while other_cat == self.ID and len(all_cats) > 1:
                 other_cat = choice(list(all_cats.keys()))
                 i += 1
@@ -1574,7 +1592,7 @@ class Cat:
                 and len(all_cats) > 1
                 or (other_cat not in self.relationships)
             ):
-                # or (self.status in ('kittypet', 'loner') and not all_cats.get(other_cat).outside):
+                # or (self.status in ['kittypet', 'loner'] and not all_cats.get(other_cat).outside):
                 other_cat = choice(list(all_cats.keys()))
                 i += 1
                 if i > 100:
@@ -1908,6 +1926,7 @@ class Cat:
         :param severity: _description_, defaults to 'default'
         :type severity: str, optional
         """
+        
         if name not in INJURIES:
             print(f"WARNING: {name} is not in the injuries collection.")
             return
@@ -1927,7 +1946,7 @@ class Cat:
             Cat.all_cats.values(), get_amount_cat_for_one_medic(game.clan)
         ):
             duration = med_duration
-        if severity != "minor":
+        if severity not in ["minor", "clipped"]:
             duration += randrange(-1, 1)
         if duration == 0:
             duration = 1
@@ -2005,8 +2024,16 @@ class Cat:
 
         for condition in PERMANENT:
             possible = PERMANENT[condition]
-            if possible["congenital"] in ("always", "sometimes"):
-                possible_conditions.append(condition)
+            if possible["congenital"] in ["always", "sometimes"]:
+                if "species" in possible:
+                    if cat.species in possible["species"]:
+                        if "wing_count" in possible:
+                            if cat.wing_count in possible["wing_count"]:
+                                possible_conditions.append(condition)
+                        else:
+                            possible_conditions.append(condition)
+                else:
+                    possible_conditions.append(condition)
 
         new_condition = choice(possible_conditions)
 
@@ -2018,6 +2045,9 @@ class Cat:
         self.get_permanent_condition(new_condition, born_with=True)
 
     def get_permanent_condition(self, name, born_with=False, event_triggered=False):
+        losing_both = False # we don't know if kitty is going to lose both wings yet...
+        name = "lost a wing"
+
         if name not in PERMANENT:
             print(
                 self.name,
@@ -2031,23 +2061,40 @@ class Cat:
             return
 
         # remove accessories if need be
-        if "NOTAIL" in self.pelt.scars or "HALFTAIL" in self.pelt.scars:
-            self.pelt.accessory = [
-                acc for acc in self.pelt.accessory
-                if acc not in (
-                    "RED FEATHERS",
-                    "BLUE FEATHERS",
-                    "JAY FEATHERS",
-                    "GULL FEATHERS",
-                    "SPARROW FEATHERS",
-                    "CLOVER",
-                    "DAISY",
-                    "WISTERIA",
-                    "GOLDEN CREEPING JENNY",
-                )
-            ]
+        if "NOTAIL" in self.pelt.scars and self.pelt.accessory in [
+            "RED FEATHERS",
+            "BLUE FEATHERS",
+            "JAY FEATHERS",
+            "GULL FEATHERS",
+            "SPARROW FEATHERS",
+            "CLOVER",
+            "DAISY",
+        ]:
+            self.pelt.accessory = None
+        if "HALFTAIL" in self.pelt.scars and self.pelt.accessory in [
+            "RED FEATHERS",
+            "BLUE FEATHERS",
+            "JAY FEATHERS",
+            "GULL FEATHERS",
+            "SPARROW FEATHERS",
+            "CLOVER",
+            "DAISY",
+        ]:
+            self.pelt.accessory = None
+        
+        # one wing is already gone, time to add the lost their wings condition!
+        if ("lost a wing" in self.permanent_condition or self.display_wing_count == 1) and name in ["lost a wing", "lost their wings"]: 
+            name = "lost their wings"
+            losing_both = True
+            print("the deletion incident")
 
         condition = PERMANENT[name]
+
+        # wing count check before proceeding - excludes if this is where it changes from lost a wing -> lost their wings
+        if "wing_count" in condition:
+            if (self.display_wing_count not in condition["wing_count"]) and not losing_both:
+                return
+        
         new_condition = False
         mortality = condition["mortality"][self.age.value]
         if mortality != 0 and (game.clan and game.clan.game_mode == "cruel season"):
@@ -2062,7 +2109,7 @@ class Cat:
             )  # creating a range in which a condition can present
             moons_until = max(moons_until, 0)
 
-        if born_with and self.status not in ("kitten", "newborn"):
+        if born_with and self.status not in ["kitten", "newborn"]:
             moons_until = -2
         elif born_with is False:
             moons_until = 0
@@ -2094,15 +2141,47 @@ class Cat:
                 "event_triggered": new_perm_condition.new,
             }
             new_condition = True
+        
+        if self.wing_count == 1 or ("born with one wing" in self.permanent_condition and name == "lost a wing"):
+            self.display_wing_count = 0
+
+        if name == "born with one wing" or name == "lost a wing":
+            self.display_wing_count = 1
+
+        if name == "born with no wings" or name == "lost their wings":
+            self.display_wing_count = 0
+
+        if name == "lost their wings" and ("lost a wing" in self.permanent_condition):
+            self.permanent_condition.pop("lost a wing", None) # delete it, both are gone now :)
+        
         return new_condition
+    
+    def clipped_wings(self):
+        """returns True if the cat has clipped wings, False if the cat doesn't have clipped wings"""
+        for injury in self.injuries:
+            if self.injuries[injury]["severity"] == "clipped":
+                return True
+        return False
+        
+    def one_wing(self):
+        for permanent_condition in self.permanent_condition:
+            if permanent_condition == "born with one wing" or permanent_condition == "lost a wing":
+                return True
+        return False
+        
+    def no_wings(self):
+        for permanent_condition in self.permanent_condition:
+            if permanent_condition == "born with no wings" or permanent_condition == "lost their wings":
+                return True
+        return False
 
     def not_working(self):
         """returns True if the cat cannot work, False if the cat can work"""
         for illness in self.illnesses:
-            if self.illnesses[illness]["severity"] != "minor":
+            if self.illnesses[illness]["severity"] == "major":
                 return True
         return any(
-            self.injuries[injury]["severity"] != "minor" for injury in self.injuries
+            self.injuries[injury]["severity"] not in ["clipped", "minor"] for injury in self.injuries
         )
 
     def not_work_because_hunger(self):
@@ -2110,7 +2189,7 @@ class Cat:
         non_minor_injuries = [
             injury
             for injury in self.injuries
-            if self.injuries[injury]["severity"] != "minor"
+            if self.injuries[injury]["severity"] == "major"
         ]
         if len(non_minor_injuries) > 0:
             return False
@@ -2126,11 +2205,11 @@ class Cat:
 
         # There are some special tasks we need to do for apprentice
         # Note that although you can un-retire cats, they will be a full warrior/med_cat/mediator
-        if self.moons > 6 and self.status in (
+        if self.moons > 6 and self.status in [
             "apprentice",
             "medicine cat apprentice",
             "mediator apprentice",
-        ):
+        ]:
             _ment = Cat.fetch_cat(self.mentor) if self.mentor else None
             self.status_change(
                 "warrior"
@@ -2151,14 +2230,6 @@ class Cat:
     def is_disabled(self):
         """Returns true if the cat have permanent condition"""
         return len(self.permanent_condition) > 0
-
-    def available_to_work(self):
-        return (
-            not self.dead
-            and not self.outside
-            and not self.exiled
-            and not self.not_working()
-        )
 
     def contact_with_ill_cat(self, cat: Cat):
         """handles if one cat had contact with an ill cat"""
@@ -2280,11 +2351,11 @@ class Cat:
             and potential_mentor.status != "medicine cat"
         ):
             return False
-        if self.status == "apprentice" and potential_mentor.status not in (
+        if self.status == "apprentice" and potential_mentor.status not in [
             "leader",
             "deputy",
             "warrior",
-        ):
+        ]:
             return False
         if (
             self.status == "mediator apprentice"
@@ -2339,7 +2410,7 @@ class Cat:
             or self.outside
             or self.exiled
             or self.status
-            not in ("apprentice", "mediator apprentice", "medicine cat apprentice")
+            not in ["apprentice", "mediator apprentice", "medicine cat apprentice"]
         )
         if illegible_for_mentor:
             self.__remove_mentor()
@@ -2649,15 +2720,15 @@ class Cat:
                     and the_cat.parent1 is not None
                     and the_cat.parent2 is not None
                 ):
-                    are_parents = the_cat.ID in (self.parent1, self.parent2)
-                    parents = are_parents or self.ID in (
+                    are_parents = the_cat.ID in [self.parent1, self.parent2]
+                    parents = are_parents or self.ID in [
                         the_cat.parent1,
                         the_cat.parent2,
-                    )
-                    siblings = self.parent1 in (
+                    ]
+                    siblings = self.parent1 in [
                         the_cat.parent1,
                         the_cat.parent2,
-                    ) or self.parent2 in (the_cat.parent1, the_cat.parent2)
+                    ] or self.parent2 in [the_cat.parent1, the_cat.parent2]
 
                 related = parents or siblings
 
@@ -2824,7 +2895,7 @@ class Cat:
             chance -= 5
 
         # Cat's compatibility with mediator also has an effect on success chance.
-        for cat in (cat1, cat2):
+        for cat in [cat1, cat2]:
             if get_personality_compatibility(cat, mediator) is True:
                 chance += 5
             elif get_personality_compatibility(cat, mediator) is False:
@@ -3334,9 +3405,12 @@ class Cat:
 
     def get_info_block(self, *, make_clan=False, patrol=False, relationship=False):
         if make_clan:
+            wing_display = f"{self.wing_count} wing" if self.wing_count == 1 else f"{self.wing_count} wings"
             return "\n".join(
                 [
                     self.genderalign,
+                    self.species,
+                    wing_display,
                     i18n.t(
                         f"general.{self.age}"
                         if self.age != "kitten"
@@ -3362,7 +3436,7 @@ class Cat:
                 ]
             )
         elif relationship:
-            return " - ".join(
+            return "\n".join(
                 [
                     i18n.t("general.moons_age", count=self.moons),
                     self.genderalign,
@@ -3385,6 +3459,9 @@ class Cat:
                 "ID": self.ID,
                 "name_prefix": self.name.prefix,
                 "name_suffix": self.name.suffix,
+                "species": self.species,
+                "wing_count": self.wing_count,
+                "display_wing_count": self.display_wing_count,
                 "status": self.status,
                 "moons": self.moons,
                 "dead_for": self.dead_for,
@@ -3401,6 +3478,9 @@ class Cat:
                 "name_suffix": self.name.suffix,
                 "specsuffix_hidden": self.name.specsuffix_hidden,
                 "gender": self.gender,
+                "species": self.species,
+                "wing_count": self.wing_count,
+                "display_wing_count": self.display_wing_count,
                 "gender_align": self.genderalign,
                 "pronouns": self._pronouns
                 if self._pronouns is not None
@@ -3431,15 +3511,20 @@ class Cat:
                 "pelt_name": self.pelt.name,
                 "pelt_color": self.pelt.colour,
                 "pelt_length": self.pelt.length,
-                "sprite_kitten": self.pelt.cat_sprites["kitten"],
-                "sprite_adolescent": self.pelt.cat_sprites["adolescent"],
-                "sprite_adult": self.pelt.cat_sprites["adult"],
-                "sprite_senior": self.pelt.cat_sprites["senior"],
-                "sprite_para_adult": self.pelt.cat_sprites["para_adult"],
+                "sprite_newborn": self.pelt.cat_sprites['newborn'],
+                "sprite_kitten": self.pelt.cat_sprites['kitten'],
+                "sprite_adolescent": self.pelt.cat_sprites['adolescent'],
+                "sprite_adult": self.pelt.cat_sprites['adult'],
+                "sprite_senior": self.pelt.cat_sprites['senior'],
+                "sprite_para_adult": self.pelt.cat_sprites['para_adult'],
                 "eye_colour": self.pelt.eye_colour,
                 "eye_colour2": (self.pelt.eye_colour2 or None),
                 "reverse": self.pelt.reverse,
                 "white_patches": self.pelt.white_patches,
+                "wing_white_patches": self.pelt.wing_white_patches,
+                "wing_marks": self.pelt.wing_marks,
+                "mane_marks": self.pelt.mane_marks,
+                "mane": self.pelt.mane,
                 "vitiligo": self.pelt.vitiligo,
                 "points": self.pelt.points,
                 "white_patches_tint": self.pelt.white_patches_tint,
@@ -3452,6 +3537,7 @@ class Cat:
                 "skill_dict": self.skills.get_skill_dict(),
                 "scars": self.pelt.scars or [],
                 "accessory": self.pelt.accessory,
+                "extra_traits": self.get_extra_traits_dict(),
                 "experience": self.experience,
                 "dead_moons": self.dead_for,
                 "current_apprentice": list(self.apprentice),
@@ -3463,6 +3549,17 @@ class Cat:
                 "prevent_fading": self.prevent_fading,
                 "favourite": self.favourite,
             }
+        
+    def get_extra_traits_dict(self):
+        """obtain the extra traits."""
+        return {
+            "size": self.pelt.size,
+            "wing_shape": self.pelt.wing_shape,
+            "scent": self.pelt.scent,
+            "body_type": self.pelt.body_type,
+            "fur": self.pelt.fur,
+            "fur_texture": self.pelt.fur_texture,
+        }
 
     def determine_next_and_previous_cats(
         self, filter_func: Callable[[Cat], bool] = None
@@ -3572,6 +3669,9 @@ with open(f"{resource_directory}illnesses.json", "r", encoding="utf-8") as read_
 
 with open(f"{resource_directory}injuries.json", "r", encoding="utf-8") as read_file:
     INJURIES = ujson.loads(read_file.read())
+
+with open(f"{resource_directory}species_conditions.json", "r", encoding="utf-8") as read_file:
+    SPECIES_CONDITIONS = ujson.loads(read_file.read())
 
 with open(
     f"{resource_directory}permanent_conditions.json", "r", encoding="utf-8"

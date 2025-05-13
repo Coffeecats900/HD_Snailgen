@@ -229,7 +229,7 @@ class Condition_Events:
 
         elif MAL_PERCENTAGE >= cat_nutrition.percentage > STARV_PERCENTAGE:
             # because of the smaller 'nutrition buffer', kitten and elder should get the starving condition.
-            if cat.status in ("kitten", "elder"):
+            if cat.status in ["kitten", "elder"]:
                 illness = "starving"
             else:
                 illness = "malnourished"
@@ -310,10 +310,10 @@ class Condition_Events:
                 cat.get_ill(chosen_illness)
 
                 # create event text
-                if i18n.config.get("locale") == "en" and chosen_illness in (
+                if i18n.config.get("locale") == "en" and chosen_illness in [
                     "running nose",
                     "stomachache",
-                ):
+                ]:
                     illness = f"a {chosen_illness}"
 
                 # try to translate the illness
@@ -384,7 +384,7 @@ class Condition_Events:
             if (
                 not triggered
                 and cat.personality.trait
-                in (
+                in [
                     "adventurous",
                     "bold",
                     "daring",
@@ -396,7 +396,7 @@ class Condition_Events:
                     "troublesome",
                     "vengeful",
                     "impulsive",
-                )
+                ]
                 and random_number <= 15
             ):
                 triggered = True
@@ -476,6 +476,8 @@ class Condition_Events:
             "recurring shock",
             "lasting grief",
             "persistent headaches",
+            "lost a wing",
+            "lost their wings"
         ]
 
         got_condition = False
@@ -494,7 +496,15 @@ class Condition_Events:
                         ]
                         for x in conditions:
                             if x in scarless_conditions:
-                                possible_conditions.append(x)
+                                if "species" in Condition_Events.PERMANENT and "wing_count" in Condition_Events.PERMANENT:
+                                    if cat.species in Condition_Events.PERMANENT[x]["species"] and cat.display_wing_count in Condition_Events.PERMANENT[x]["wing_count"]:
+                                        if "gen_wing_count" in Condition_Events.PERMANENT:
+                                            if cat.wing_count in Condition_Events.PERMANENT[x]["gen_wing_count"]:
+                                                possible_conditions.append(x)
+                                        else:
+                                            possible_conditions.append(x)
+                                else:
+                                    possible_conditions.append(x)
                         if len(possible_conditions) > 0 and not int(
                             random.random()
                             * game.config["condition_related"][
@@ -622,7 +632,7 @@ class Condition_Events:
 
                 cat.illnesses.pop(illness)
                 # make sure complications get reset if infection or fester were healed
-                if illness in ("an infected wound", "a festering wound"):
+                if illness in ["an infected wound", "a festering wound"]:
                     for injury in cat.injuries:
                         keys = cat.injuries[injury].keys()
                         if "complication" in keys:
@@ -1081,6 +1091,14 @@ class Condition_Events:
                 risk["name"] == "an infected wound"
                 and "a festering wound" in cat.illnesses
             ):
+                continue
+
+            # checking if cat species meets risk species constraint
+            if risk["species"] != "any" or cat.species not in risk["species"]:
+                continue
+
+            # checking if cat wing count meets risk wing count constraint
+            if risk["wing_count"] != "any" or cat.wing_count not in risk["wing_count"]:
                 continue
 
             # adjust chance of risk gain if Clan has enough meds

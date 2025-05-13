@@ -110,6 +110,34 @@ class Thoughts:
         elif "random_status_constraint" in thought and not random_cat:
             pass
 
+        # Constraints for the species of the main cat
+        if 'main_species_constraint' in thought:
+            if (main_cat.species not in thought['main_species_constraint'] and
+                    'any' not in thought['main_species_constraint']):
+                return False
+
+        # Constraints for the species of the random cat
+        if 'random_species_constraint' in thought and random_cat:
+            if (random_cat.species not in thought['random_species_constraint'] and
+                    'any' not in thought['random_species_constraint']):
+                return False
+        elif 'random_species_constraint' in thought and not random_cat:
+            pass
+
+        # Constraints for the wing count of the main cat
+        if 'main_wing_c_constraint' in thought:
+            if (main_cat.wing_count not in thought['main_wing_c_constraint'] and
+                    'any' not in thought['main_wing_c_constraint']):
+                return False
+
+        # Constraints for the wing count of the random cat
+        if 'random_wing_c_constraint' in thought and random_cat:
+            if (random_cat.wing_count not in thought['random_wing_c_constraint'] and
+                    'any' not in thought['random_wing_c_constraint']):
+                return False
+        elif 'random_species_constraint' in thought and not random_cat:
+            pass
+
         # main cat age constraint
         if "main_age_constraint" in thought:
             if main_cat.age not in thought["main_age_constraint"]:
@@ -198,7 +226,7 @@ class Thoughts:
             random_cat
             and random_cat.outside
             and random_cat.status
-            not in ("kittypet", "loner", "rogue", "former Clancat", "exiled")
+            not in ["kittypet", "loner", "rogue", "former Clancat", "exiled"]
         ):
             outside_status = "lost"
         elif random_cat and random_cat.outside:
@@ -305,6 +333,35 @@ class Thoughts:
                         and "any" not in thought["perm_conditions"]["r_c"]
                     ):
                         return False
+
+        if "perm_conditions_restraints" in thought:
+            if "m_c" in thought["perm_conditions_restraints"]:
+                if main_cat.permanent_condition:
+                    if (
+                        not [
+                            i
+                            for i in main_cat.permanent_condition
+                            if i in thought["perm_conditions_restraints"]["m_c"]
+                        ]
+                        and "any" not in thought["perm_conditions_restraints"]["m_c"]
+                    ):
+                        return True
+                else:
+                    return False
+
+            if "r_c" in thought["perm_conditions_restraints"] and random_cat:
+                if random_cat.permanent_condition:
+                    if (
+                        not [
+                            i
+                            for i in random_cat.permanent_condition
+                            if i in thought["perm_conditions_restraints"]["r_c"]
+                        ]
+                        and "any" not in thought["perm_conditions_restraints"]["r_c"]
+                    ):
+                        return True
+                else:
+                    return False
 
         return True
 

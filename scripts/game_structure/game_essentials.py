@@ -622,7 +622,7 @@ if not os.path.exists(get_save_dir() + "/settings.txt"):
         write_file.write("")
 game.load_settings()
 
-pygame.display.set_caption("Clan Generator")
+pygame.display.set_caption('WingedGen')
 
 toggle_fullscreen(
     fullscreen=game.settings["fullscreen"],

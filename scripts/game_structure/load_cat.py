@@ -56,22 +56,24 @@ def json_load():
     # create new cat objects
     for i, cat in enumerate(cat_data):
         try:
-            new_cat = Cat(
-                ID=cat["ID"],
-                prefix=cat["name_prefix"],
-                suffix=cat["name_suffix"],
-                specsuffix_hidden=(
-                    cat["specsuffix_hidden"] if "specsuffix_hidden" in cat else False
-                ),
-                gender=cat["gender"],
-                status=cat["status"],
-                parent1=cat["parent1"],
-                parent2=cat["parent2"],
-                moons=cat["moons"],
-                eye_colour=cat["eye_colour"],
-                loading_cat=True,
-            )
-
+            
+            new_cat = Cat(ID=cat["ID"],
+                        prefix=cat["name_prefix"],
+                        suffix=cat["name_suffix"],
+                        specsuffix_hidden=(
+                            cat["specsuffix_hidden"] if "specsuffix_hidden" in cat else False
+                        ),
+                        gender=cat["gender"],
+                        species=cat["species"] if "species" in cat else None,
+                        wing_count=cat["wing_count"] if "wing_count" in cat else None,
+                        display_wing_cat=cat["display_wing_count"] if "display_wing_cat" in cat else None,
+                        status=cat["status"],
+                        parent1=cat["parent1"],
+                        parent2=cat["parent2"],
+                        moons=cat["moons"],
+                        eye_colour=cat["eye_colour"],
+                        loading_cat=True)
+            
             if cat["eye_colour"] == "BLUE2":
                 cat["eye_colour"] = "COBALT"
             if cat["eye_colour"] in ["BLUEYELLOW", "BLUEGREEN"]:
@@ -91,6 +93,8 @@ def json_load():
                 eye_color=cat["eye_colour"],
                 eye_colour2=cat["eye_colour2"] if "eye_colour2" in cat else None,
                 paralyzed=cat["paralyzed"],
+                species=cat["species"] if "species" in cat else None,
+                newborn_sprite=cat["sprite_newborn"] if "sprite_newborn" in cat else 20,
                 kitten_sprite=(
                     cat["sprite_kitten"]
                     if "sprite_kitten" in cat
@@ -123,6 +127,10 @@ def json_load():
                     else "offwhite"
                 ),
                 white_patches=cat["white_patches"],
+                wing_white_patches=cat["wing_white_patches"] if "wing_white_patches" in cat else None,
+                wing_marks=cat["wing_marks"] if "wing_marks" in cat else "none",
+                mane_marks=cat["mane_marks"] if "mane_marks" in cat else None,
+                mane=cat["mane"] if "mane" in cat else True,
                 tortiebase=cat["tortie_base"],
                 tortiecolour=cat["tortie_color"],
                 tortiepattern=cat["tortie_pattern"],
@@ -131,13 +139,24 @@ def json_load():
                 tint=cat["tint"] if "tint" in cat else "none",
                 scars=cat["scars"] if "scars" in cat else [],
                 accessory=cat["accessory"],
+                wing_shape=cat["extra_traits"]["wing_shape"] if "extra_traits" in cat else None,
+                scent=cat["extra_traits"]["scent"] if "extra_traits" in cat else None,
+                size=cat["extra_traits"]["size"] if "extra_traits" in cat else None,
+                fur=cat["extra_traits"]["fur"] if "extra_traits" in cat else None,
+                fur_texture=cat["extra_traits"]["fur_texture"] if "extra_traits" in cat else None,
+                body_type=cat["extra_traits"]["body_type"] if "extra_traits" in cat else None,
                 opacity=cat["opacity"] if "opacity" in cat else 100,
             )
 
-            # Runs a bunch of apperence-related convertion of old stuff.
-            new_cat.pelt.check_and_convert(convert)
+            if None in [new_cat.pelt.wing_shape, new_cat.pelt.scent, new_cat.pelt.size, new_cat.pelt.fur, new_cat.pelt.fur_texture, new_cat.pelt.body_type]:
+                extra_traits = False
+            else:
+                extra_traits = True
 
-            # converting old specialty saves into new scar parameter
+            # Runs a bunch of apperence-related convertion of old stuff. 
+            new_cat.pelt.check_and_convert(convert, extra_traits)
+
+             # converting old specialty saves into new scar parameter
             if "specialty" in cat or "specialty2" in cat:
                 if cat["specialty"] is not None:
                     new_cat.pelt.scars.append(cat["specialty"])
@@ -257,6 +276,16 @@ def json_load():
         elif "paralyzed" in cat.permanent_condition and not cat.pelt.paralyzed:
             cat.pelt.paralyzed = True
 
+        # set display wing count
+        if cat.display_wing_count not in ["0", "1", "2"]:
+            if "lost a wing" in cat.permanent_condition or "born with one wing" in cat.permanent_condition:
+                cat.display_wing_count = 1
+            elif "lost their wings" in cat.permanent_condition or "born with no wings" in cat.permanent_condition:
+                cat.display_wing_count = 0
+            else:
+                cat.display_wing_count = cat.wing_count
+
+            
         # load the relationships
         try:
             if not cat.dead:
@@ -410,7 +439,7 @@ def csv_load(all_cats):
                 ] = "10There was an error loading cat # " + str(attr[0])
                 the_cat.skill = attr[25]
                 if len(attr) > 28:
-                    the_cat.pelt.accessory = [attr[28]]
+                    the_cat.pelt.accessory = attr[28]
                 if len(attr) > 29:
                     the_cat.specialty2 = attr[29]
                 else:

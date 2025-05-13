@@ -54,7 +54,10 @@
     "Singlestripe": ["stripe", "streak", "back", "shade", "stem", "shadow"],
     "Masked": ["stripe", "mask", "mask", "shade"],
     "Tortie": ["dapple", "speckle", "spot", "dapple"],
-    "Calico": ["stripe", "dapple", "patch", "patch"]
+    "Calico": ["stripe", "dapple", "patch", "patch"],
+    "Pinstripe": ["fleck", "spots", "speck", "freckle", "dapple"],
+    "Braided": ["stripes", "stripe", "streak", "fire", "feather", "flame"],
+    "Duotone": ["smoke", "frost", "dawn", "fade", "dusk"]
   },
   "tortie_pelt_suffixes": {
     "single": ["dapple", "speckle", "spots", "splash"],
@@ -70,7 +73,10 @@
     "sokoke": ["stripe", "feather", "fern", "shade", "dapple"],
     "agouti": ["back", "pelt", "fur", "dapple", "splash"],
     "singlestripe": ["stripe", "back", "shade", "stem", "dapple"],
-    "masked": ["stripe", "dapple", "mask", "mask", "shade"]
+    "masked": ["stripe", "dapple", "mask", "mask", "shade"],
+    "pinstripe": [],
+    "braided": [],
+    "duotone": ["feather", "frost", "dusk", "dawn", "fade", "smoke", "wisp"]
   },
 
   "normal_prefixes": [
@@ -168,6 +174,14 @@
     "Rowan", "Fox", "Tawny", "Plum", "Orange", "Warm", "Burn", "Burnt", "Robin", "Amber", "Larkspur", "Straw", "Lyre",
     "Flare", "Blaze", "Ochre", "Auburn", "Pumpkin"
     ],
+    "SUNSET": [
+    "Ginger", "Ginger", "Red", "Fire", "Rust", "Flame", "Ember", "Sun", "Sunny", "Light", "Primrose", "Rose",
+    "Rowan", "Fox", "Tawny", "Plum", "Orange", "Warm", "Burn", "Burnt", "Robin", "Amber", "Larkspur", "Straw", "Lyre",
+    "Flare", "Blaze", "Ochre", "Auburn", "Pumpkin", 
+    "Gold", "Gold", "Golden", "Yellow", "Sun", "Sunny", "Light", "Lightning", "Thunder", "Day", "Fig",
+    "Honey", "Tawny", "Lion", "Dandelion", "Marigold", "Warm", "Amber", "Canary", "Chick", "Daffodil", "Saffron",
+    "Buttercup", "Straw", "Glint", "Auburn"
+    ],
     "DARKGINGER": [
     "Ginger", "Ginger", "Red", "Red", "Fire", "Flame", "Ember", "Oak", "Shade", "Russet", "Fuchsia", "Hollyhock",
     "Rowan", "Fox", "Orange", "Copper", "Cinnamon", "Burn", "Burnt", "Robin", "Oleander", "Scarlet", "Rust", "Lyre",
@@ -182,14 +196,39 @@
     "Sand", "Sandy", "Yellow", "Pale", "Cream", "Cream", "Light", "Milk", "Fawn", "Morel", "Jasmine", "Veil",
     "Bone", "Daisy", "Branch", "Warm", "Robin", "Spindle", "Ivory", "Pale", "Bright", "Peach", "Egg"
     ],
+    "PALECREAM": [
+    "Pale", "Sand", "Sandy", "Yellow", "Sun", "Sunny", "Light", "Lion", "Bright", "Phlox", "Vervain",
+    "Honey", "Daisy", "Warm", "Cosmos", "Orchid", "Verbena", "Straw",
+    "Orange", "Ochre", "Peach", "Auburn", "Pumpkin", "Sand", "Sandy", "Yellow", "Pale", "Cream", "Cream", "Light", "Milk", "Fawn", "Morel", "Jasmine", "Veil",
+    "Bone", "Daisy", "Branch", "Warm", "Robin", "Spindle", "Ivory", "Pale", "Bright", "Peach", "Egg"
+    ],
     "LIGHTBROWN": [
     "Brown", "Pale", "Light", "Mouse", "Dust", "Dusty", "Sand", "Sandy", "Bright", "Mud", "Scrub", "Velvet",
     "Hazel", "Vole", "Branch", "Warm", "Robin", "Puma", "Umber",
     "Tree", "Root", "Bark"
     ],
+    "BEIGE": [
+    "Brown", "Pale", "Light", "Mouse", "Dust", "Dusty", "Sand", "Sandy", "Bright", "Mud", "Scrub", "Velvet",
+    "Hazel", "Vole", "Branch", "Warm", "Robin", "Puma", "Umber",
+    "Tree", "Root", "Bark", 
+    "Sand", "Sandy", "Yellow", "Pale", "Cream", "Cream", "Light", "Milk", "Fawn", "Morel", "Jasmine", "Veil",
+    "Bone", "Daisy", "Branch", "Warm", "Robin", "Spindle", "Ivory", "Pale", "Bright", "Peach", "Egg"
+    ],
     "LILAC": [
     "Pale", "Light", "Mouse", "Dust", "Dusty", "Sand", "Sandy", "Bright", "Mud", "Scrub", "Velvet",
     "Hazel", "Vole", "Branch", "Warm", "Robin", "Lilac", "Lavender", "Heather"
+    ],
+    "LAVENDER": [
+    "Mouse", "Dust", "Dusty", "Mud", "Scrub", "Velvet", "Lilac", "Lavender", "Heather", "Violet", "Starling", "Finch", "Jay", "Heron", "Dove", "Iris", "Mint", "Anemone", "Indigo", "Hyacinth", "Aster", "Orchid"
+    ],
+    "DARKLAVENDER": [
+    "Mouse", "Scrub", "Velvet", "Lilac", "Lavender", "Heather", "Violet", "Starling", "Finch", "Jay", "Heron", "Dove", "Iris", "Mint", "Anemone", "Indigo", "Hyacinth", "Thistle"
+    ],
+    "OLDLILAC": [
+    "Pale", "Light", "Mouse", "Dust", "Dusty", "Sand", "Sandy", "Bright", "Mud", "Scrub", "Velvet",
+    "Hazel", "Vole", "Branch", "Warm", "Robin", "Lilac", "Lavender", "Heather", "Ginger", "Ginger", "Red", "Red", "Fire", "Flame", "Ember", "Oak", "Shade", "Russet", "Fuchsia", "Hollyhock",
+    "Rowan", "Fox", "Orange", "Copper", "Cinnamon", "Burn", "Burnt", "Robin", "Oleander", "Scarlet", "Rust", "Lyre",
+    "Robin", "Berry", "Ochre", "Auburn", "Burnet"
     ],
     "BROWN": [
     "Brown", "Brown", "Oak", "Mouse", "Dark", "Shade", "Russet", "Dust", "Dusty", "Mud", "Deer", "Fawn", "Doe", "Stag",
@@ -212,7 +251,31 @@
     "Black", "Black", "Black", "Shade", "Shaded", "Crow", "Raven", "Ebony", "Dark", "Grackle",
     "Night", "Shadow", "Scorch", "Midnight", "Pepper", "Pitch", "Bat", "Burnt", "Coal", "Ink", "Inky",
     "Char", "Charred", "Mulberry", "Night", "Evening", "Dark", "Murk", "Ghost"
-    ]
+    ],
+    "ASH": [
+    "Black", "Black", "Black", "Shade", "Shaded", "Crow", "Raven", "Ebony", "Dark", "Grackle",
+    "Night", "Shadow", "Scorch", "Midnight", "Pepper", "Pitch", "Bat", "Burnt", "Coal", "Ink", "Inky",
+    "Char", "Charred", "Mulberry", "Night", "Evening", "Dark", "Murk", "Ghost", 
+    "Brown", "Brown", "Dark", "Dark", "Shade", "Night", "Russet", "Rowan", "Mud", "Oak", "Twig", "Loach", "Shadow",
+    "Owl", "Otter", "Log", "Hickory", "Branch", "Robin", "Umber", "Chanterelle", "Dust", "Mud", "Auburn", "Burnet"
+    ],
+    "DUST": [
+    "Brown", "Brown", "Oak", "Mouse", "Dark", "Shade", "Russet", "Dust", "Dusty", "Mud", "Deer", "Fawn", "Doe", "Stag",
+    "Twig", "Owl", "Otter", "Log", "Vole", "Branch", "Hazel", "Robin", "Umber", "Tree", "Root", "Shadow", "Ochre", "Auburn", "Burnet",
+    "Thrasher", "Thrush"
+    ],
+    "GHOSTBROWN": ["Brown", "Brown", "Oak", "Mouse", "Dark", "Shade", "Russet", "Dust", "Dusty", "Mud", "Deer", "Fawn", "Doe", "Stag",
+    "Twig", "Owl", "Otter", "Log", "Vole", "Branch", "Hazel", "Robin", "Umber", "Tree", "Root", "Shadow", "Ochre", "Auburn", "Burnet"],
+    "GHOSTRED": ["Ginger", "Ginger", "Red", "Red", "Fire", "Flame", "Ember", "Oak", "Shade", "Russet", "Fuchsia", "Hollyhock",
+    "Rowan", "Fox", "Orange", "Copper", "Cinnamon", "Burn", "Burnt", "Robin", "Oleander", "Scarlet", "Rust", "Lyre",
+    "Robin", "Berry", "Ochre", "Auburn", "Pumpkin", "Burnet", "Apple", "Orange", "Maple", "Poppy", "Beet", "Raspberry", "Elderberry"],
+    "GLASS": [
+      "White", "White", "Pale", "Snow", "Snowy", "Cloud", "Cloudy", "Milk", "Hail", "Frost", "Frozen", "Freeze", "Ice", "Icy", "Icicle",
+      "Blizzard", "Flurry", "Moon", "Light", "Bone", "Bright", "Swan", "Dove", "Cotton", "Hawthorn", "Laurel", "Wisp",
+      "Fringe", "Ibis", "Air", "Bright", "Rime", "Ghost", "Privet", "Egg"],
+    "COPPER": ["Brown", "Oak", "Mouse", "Dark", "Shade", "Russet", "Mud",
+    "Twig", "Owl", "Otter", "Log", "Vole", "Branch", "Hazel", "Robin", "Umber", "Tree", "Root", "Auburn", "Burnet","Thrush", "Ginger", "Oak", "Shade", "Russet", "Rowan", "Fox", "Orange", "Copper", "Cinnamon", "Burn", "Burnt", "Robin", "Scarlet", "Rust", "Lyre",
+    "Robin", "Ochre", "Auburn", "Pumpkin", "Burnet", "Copper", "Cinnamon", "Copper", "Moth", "Clay", "Acorn", "Egg", "Rock"]
   },
 
   "biome_prefixes": {
@@ -289,14 +352,21 @@
   },
 
   "eye_prefixes": {
-    "YELLOW": ["Yellow", "Moon", "Daisy", "Honey", "Light", "Sun", "Lemon"],
+    "YELLOW": ["Yellow", "Moon", "Daisy", "Honey", "Light", "Sun", "Lemon", "Bright"],
+    "HONEY": ["Yellow", "Moon", "Honey", "Honey", "Gold", "Golden", "Sun", "Bee", "Marigold"],
     "AMBER": ["Amber", "Sun", "Fire", "Gold", "Honey", "Scorch", "Flame", "Blaze", "Pumpkin"],
+    "DARKAMBER": ["Amber", "Sun", "Fire", "Gold", "Honey", "Scorch", "Flame", "Blaze", "Pumpkin", "Dusk", "Dawn"],
+    "DARKHAZEL": ["Hazel", "Tawny", "Hazel", "Sand", "Almond", "Tree", "Oak"],
     "HAZEL": ["Hazel", "Tawny", "Hazel", "Gold", "Daisy", "Sand", "Almond"],
     "PALEGREEN": ["Pale", "Green", "Mint", "Fern", "Weed", "Olive", "Stem", "Lime", "Agave"],
     "GREEN": ["Green", "Green", "Fern", "Weed", "Holly", "Clover", "Olive", "Jade", "Tree", "Algae", "Aloe"],
+    "Olive": ["Fern", "Olive", "Fern", "Weed", "Holly", "Clover", "Olive", "Tree", "Algae", "Aloe", "Leaf"],
+    "SEAFOAM": ["Sea", "Fern", "Clover", "Jade", "Tree", "Algae", "Aloe", "Emerald", "Ripple", "Rime", "Sky", "Glow", "Pale"],
     "BLUE": ["Blue", "Blue", "Ice", "Sky", "Lake", "Frost", "Water", "Icicle", "Frosty", "Cold", "Rime"],
     "DARKBLUE": ["Dark", "Blue", "Blue", "Sky", "Lake", "Berry", "Water", "Deep", "Cobalt", "River", "Night", "Rain"],
+    "OBSIDIAN": ["Dark", "Shadow", "Shade", "Green", "Pine", "Lake", "Spruce"],
     "GREY": ["Gray", "Stone", "Silver", "Ripple", "Moon", "Rain", "Storm", "Heather"],
+    "PEBBLE": ["Gray", "Stone", "Silver", "Ripple", "Moon", "Rain", "Storm", "Heather", "Dust", "Pebble"],
     "CYAN": ["Sky", "Blue", "River", "Rapid", "Ice", "Frost", "Cold", "Rime"],
     "EMERALD": ["Emerald", "Green", "Shine", "Green", "Pine", "Weed"],
     "PALEBLUE": ["Pale", "Blue", "Blue", "Sky", "River", "Ripple", "Day", "Cloud", "Rime"],
@@ -306,7 +376,15 @@
     "COPPER": ["Copper", "Red", "Amber", "Brown", "Fire", "Cinnamon"],
     "SAGE": ["Sage", "Leaf", "Olive", "Bush", "Clove", "Green", "Weed"],
     "COBALT": ["Blue", "Blue", "Ice", "Icy", "Sky", "Lake", "Frost", "Water", "Frosty", "Rime"],
+    "INDIGO": ["Blue", "Blue", "Ice", "Icy", "Sky", "Lake", "Frost", "Water", "Frosty", "Rime"],
     "SUNLITICE": ["Sun", "Ice", "Icy", "Frost", "Dawn", "Dusk", "Odd", "Glow", "Mouse"],
+    "ICE": ["Ice", "Icy", "Frost", "Glow", "Pale", "Blue", "Blue", "Sky", "River", "Ripple", "Day", "Cloud", "Rime"],
+    "VIOLET": ["Heather", "Lilac", "Lavender", "Violet", "Flower", "Iris", "Rain", "Mist", "Ripple", "Glow"],
+    "LAVENDER": ["Heather", "Lavender", "Violet", "Flower", "Iris", "Rain", "Mist", "Ripple", "Mistle"],
+    "LILAC": ["Heather", "Lilac", "Lavender", "Violet", "Flower", "Iris", "Rain", "Mist", "Ripple", "Glow", "Lilac", "Blossom"],
+    "PLUM": ["Plum", "Berry", "Violet", "Pigeon", "Flower", "Iris", "Storm", "Lake", "Lavender"],
+    "SALMON": ["Poppy", "Rose", "Marigold", "Tulip", "Blossom", "Cosmos", "Red", "Pale", "Coral"],
+    "ROSEWOOD": ["Poppy", "Rose", "Tulip", "Blossom", "Cosmos", "Rose", "Pale", "Wood", "Lotus", "Red", "Berry"],
     "GREENYELLOW": ["Green", "Yellow", "Tawny", "Hazel", "Gold", "Daisy", "Sand", "Sandy", "Weed"],
     "SILVER": ["Gray", "Stone", "Silver", "Silver", "Moon", "Rain", "Storm", "Pale", "Light"],
     "ORANGE": ["Amber", "Sun", "Fire", "Honey", "Flame", "Blaze", "Pumpkin", "Red", "Ember", "Orange"]

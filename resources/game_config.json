@@ -20,13 +20,13 @@
 			"influence_condition_events - how much an event with a condition can influence the relationship"
 		]
 	},
-	"mates":{
+	"mates": {
 		"age_range": 40,
 		"override_same_age_group": false,
 		"chance_fulfilled_condition": 5,
 		"chance_friends_to_lovers": 170,
 		"confession": {
-			"make_confession" : {
+			"make_confession": {
 				"romantic": 30,
 				"platonic": 15,
 				"dislike": -15,
@@ -35,7 +35,7 @@
 				"jealousy": 0,
 				"trust": 0
 			},
-			"accept_confession" : {
+			"accept_confession": {
 				"romantic": 17,
 				"platonic": 15,
 				"dislike": -10,
@@ -63,7 +63,7 @@
 			"jealousy": 0,
 			"trust": 0
 		},
-		"poly":{
+		"poly": {
 			"current_mate_condition": {
 				"romantic": 30,
 				"platonic": 0,
@@ -83,7 +83,7 @@
 				"trust": 20
 			}
 		},
-		"comment":[
+		"comment": [
 			"chance_fulfilled_condition - 1/chance of becoming mates when the conditions are fulfilled",
 			"chance_friends_to_lovers - 1/chance of becoming mates, triggers with friends_to_lover (has to be a high number because many relationships are checked each moon)",
 			"VALUES IN RELATIONSHIP DICT - 0: no condition; positive number: value has to be higher than number; negative number: value has to be lower than number",
@@ -135,7 +135,7 @@
 				"trust": 30
 			}
 		},
-		"rel_buff":{
+		"rel_buff": {
 			"new_to_clan_cat": {
 				"romantic": 0,
 				"platonic": 15,
@@ -145,7 +145,7 @@
 				"jealousy": 0,
 				"trust": 15
 			},
-			"clan_cat_to_new":{
+			"clan_cat_to_new": {
 				"romantic": 0,
 				"platonic": 15,
 				"dislike": 0,
@@ -159,16 +159,46 @@
 	},
 	"pregnancy": {
 		"birth_cooldown": 6,
-		"primary_chance_mated": 80,
+		"primary_chance_mated": 20,
 		"primary_chance_unmated": 130,
 		"random_affair_chance": 50,
 		"unmated_random_affair_chance": 10,
-		"one_kit_possibility": {"young adult": 8, "adult": 9, "senior adult": 10, "senior": 4},
-        "two_kit_possibility": {"young adult": 10, "adult": 13, "senior adult": 15, "senior": 3},
-        "three_kit_possibility": {"young adult": 17, "adult": 15, "senior adult": 5, "senior": 1},
-        "four_kit_possibility": {"young adult": 12, "adult": 8, "senior adult": 2, "senior": 0},
-        "five_kit_possibility": {"young adult": 6, "adult": 2, "senior adult": 0, "senior": 0},
-		"max_kit_possibility": {"young adult": 2, "adult": 0, "senior adult": 0, "senior": 0},
+		"one_kit_possibility": {
+			"young adult": 8,
+			"adult": 9,
+			"senior adult": 10,
+			"senior": 4
+		},
+		"two_kit_possibility": {
+			"young adult": 10,
+			"adult": 13,
+			"senior adult": 15,
+			"senior": 3
+		},
+		"three_kit_possibility": {
+			"young adult": 17,
+			"adult": 15,
+			"senior adult": 5,
+			"senior": 1
+		},
+		"four_kit_possibility": {
+			"young adult": 12,
+			"adult": 8,
+			"senior adult": 2,
+			"senior": 0
+		},
+		"five_kit_possibility": {
+			"young adult": 6,
+			"adult": 2,
+			"senior adult": 0,
+			"senior": 0
+		},
+		"max_kit_possibility": {
+			"young adult": 2,
+			"adult": 0,
+			"senior adult": 0,
+			"senior": 0
+		},
 		"min_kits": 1,
 		"max_kits": 6,
 		"comment": [
@@ -178,6 +208,12 @@
 			"As in, your max kits number should probably be 5 more than the min kits number.",
 			"But that's not required - just makes more sense that way with how the litters are generated."
 		]
+	},
+	"species_generation": {
+		"earth": 10,
+		"bird": 100,
+		"bat": 70,
+		"bug": 0
 	},
 	"cat_generation": {
 		"base_permanent_condition": 90,
@@ -235,18 +271,18 @@
 		"kitten": [1, 5],
 		"adolescent": [6, 11],
 		"young adult": [12, 47],
-        "adult": [48, 95],
-        "senior adult": [96, 119],
-        "senior": [120, 300],
+		"adult": [48, 95],
+		"senior adult": [96, 119],
+		"senior": [120, 300],
 		"comment": [
 			"These HAVE to be in the correct order: where one ends, the next one begins on the next number.",
 			"If you DON'T DO THIS, your game WILL break."
 		]
 	},
-    "cat_sprites": {
-        "sick_sprites": true,
-        "comment": "Set this to false to disable sick sprites."
-    },
+	"cat_sprites": {
+		"sick_sprites": true,
+		"comment": "Set this to false to disable sick sprites."
+	},
 	"patrol_generation": {
 		"classic_difficulty_modifier": 1,
 		"expanded_difficulty_modifier": 2.5,
@@ -295,12 +331,18 @@
 		"war_injury_modifier": 100
 	},
 	"clan_creation": {
-		"rerolls": 3,
+		"rerolls": -1,
 		"comment": "Set this to -1 for it to be infinite"
 	},
 	"graduation": {
-		"base_app_timeskip_ex": [[3, 12],[5, 6]],
-		"base_med_app_timeskip_ex": [[2, 7],[2, 3]],
+		"base_app_timeskip_ex": [
+			[3, 12],
+			[5, 6]
+		],
+		"base_med_app_timeskip_ex": [
+			[2, 7],
+			[2, 3]
+		],
 		"max_apprentice_age": {
 			"medicine cat apprentice": 30,
 			"apprentice": 25,
@@ -410,11 +452,11 @@
 	"sorting": {
 		"sort_dead_by_total_age": true,
 		"sort_rank_by_death": true,
-        "sort_by_rel_total": true,
+		"sort_by_rel_total": true,
 		"comment": [
 			"sort_dead_by_total_age - true: sort dead cats by total age (in the order they were born); false: sort dead cats by their age at the time of death.",
-            "sort_rank_by_death - true: when filtering dead cats by rank, list them in the order they died; false: when filtering dead cats by rank, sort dead cats by total age (in the order they were born).",
-            "sort_by_rel_total - true: sort a cat's relationships by the sum of their values; false: they will be sorted in the order they were added."
+			"sort_rank_by_death - true: when filtering dead cats by rank, list them in the order they died; false: when filtering dead cats by rank, sort dead cats by total age (in the order they were born).",
+			"sort_by_rel_total - true: sort a cat's relationships by the sum of their values; false: they will be sorted in the order they were added."
 		]
 	},
 	"fun": {

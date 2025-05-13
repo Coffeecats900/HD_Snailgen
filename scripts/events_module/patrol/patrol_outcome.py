@@ -352,22 +352,22 @@ class PatrolOutcome:
         possible_stat_cats = []
         for kitty in patrol.patrol_cats:
             # First, the blanket requirements
-            if "app" in self.can_have_stat and kitty.status not in (
+            if "app" in self.can_have_stat and kitty.status not in [
                 "apprentice",
                 "medicine cat apprentice",
-            ):
+            ]:
                 continue
 
-            if "adult" in self.can_have_stat and kitty.status in (
+            if "adult" in self.can_have_stat and kitty.status in [
                 "apprentice",
                 "medicine cat apprentice",
-            ):
+            ]:
                 continue
 
-            if "healer" in self.can_have_stat and kitty.status not in (
+            if "healer" in self.can_have_stat and kitty.status not in [
                 "medicine cat",
                 "medicine cat apprentice",
-            ):
+            ]:
                 continue
 
             # Then, move on the specific requirements.
@@ -429,7 +429,7 @@ class PatrolOutcome:
             gm_modifier = 1
 
         base_exp = 0
-        if "master" in (x.experience_level for x in patrol.patrol_cats):
+        if "master" in [x.experience_level for x in patrol.patrol_cats]:
             max_boost = 10
         else:
             max_boost = 0
@@ -447,7 +447,7 @@ class PatrolOutcome:
 
         if gained_exp or app_exp:
             for cat in patrol.patrol_cats:
-                if cat.status in ("apprentice", "medicine cat apprentice"):
+                if cat.status in ["apprentice", "medicine cat apprentice"]:
                     cat.experience = cat.experience + app_exp
                 else:
                     cat.experience = cat.experience + gained_exp
@@ -579,15 +579,23 @@ class PatrolOutcome:
             # Injury or scar the cats
             results = []
             for _cat in cats:
+                sel_injuries = []
+
                 # give condition
                 if not possible_injuries:
                     continue
+
+                # check species constraints
+                for pos_injury in possible_injuries:
+                    if "species" in pos_injury and "wing_count" in pos_injury:
+                        if _cat.species in pos_injury["species"] and _cat.wing_count in pos_injury["wing_count"]:
+                            sel_injuries.append(pos_injury)
 
                 old_injuries = list(_cat.injuries.keys())
                 old_illnesses = list(_cat.illnesses.keys())
                 old_perm_cond = list(_cat.permanent_condition.keys())
 
-                if set(possible_injuries).issubset(
+                if set(sel_injuries).issubset(
                     old_injuries + old_illnesses + old_perm_cond
                 ):
                     print(
@@ -595,14 +603,14 @@ class PatrolOutcome:
                     )
                     continue
 
-                give_injury = choice(possible_injuries)
+                give_injury = choice(sel_injuries)
                 # If the cat already has this injury, reroll it to get something new
                 while (
                     give_injury in old_injuries
                     or give_injury in old_illnesses
                     or give_injury in old_perm_cond
                 ):
-                    give_injury = choice(possible_injuries)
+                    give_injury = choice(sel_injuries)
 
                 if give_injury in INJURIES:
                     _cat.get_injured(give_injury, lethal=lethal)
@@ -805,7 +813,7 @@ class PatrolOutcome:
 
         if not self.new_cat:
             return ""
-
+        
         results = []
         in_event_cats = {
             "p_l": patrol.patrol_leader,
@@ -864,6 +872,12 @@ class PatrolOutcome:
                     ):
                         sub_sub[0].get_injured("recovering from birth")
                         break  # Break - only one parent ever gives birth
+        for sub in patrol.new_cats:
+            if sub[0].moons > 6 and sub[0].species == "bird cat":
+                clip_chance = random.randint(0, 10)
+                if sub[0].backstory in ["kittypet1", "kittypet2", "kittypet3", "kittypet4", "kittypet5"] and clip_chance < 6:
+                    sub[0].get_injured("clipped wings")
+        
 
         return " ".join(results)
 
